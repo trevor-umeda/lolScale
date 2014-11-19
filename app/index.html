@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
+  <title></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
@@ -23,7 +23,9 @@
   <div ng-controller="ChampionListCtrl">
     <ul>
       <li ng-repeat="champion in data.data">
-        {{champion.id}}
+        <div class="champion-image">
+          <img ng-src="http://ddragon.leagueoflegends.com/cdn/4.19.3/img/champion/{{champion.image.full}}" resize></img>
+        </div>
       </li>
     </ul>
   </div>
