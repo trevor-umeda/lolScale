@@ -29,7 +29,12 @@
   padding: 0;
 }
 
-.champion-image {
+.champion-list li {
   /*width:80px;
   height:80px;*/
+    display: inline;
+}
+.champion-image {
+    display: inline;
+
 }
