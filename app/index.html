@@ -23,13 +23,13 @@
 
   <div ng-controller="ChampionDetailsCtrl">
       <div ng-show="selectedChampionService.selectionMade">
-          <img ng-src="http://ddragon.leagueoflegends.com/cdn/4.19.3/img/champion/{{selectedChampionService.champSelection}}.png" ></img>
+          <img ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/champion/{{selectedChampionService.champSelection}}.png" ></img>
           <table id="champion_info-lower-preseason" style="position:relative; box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;text-align:center;padding:12px 12px; border-spacing:0; width:100%; max-width:612px;margin:0 auto;">
               <tbody>
               <tr>
                   <td>
                       <div id="levelselectcontainer" style="position: absolute; left: auto; right: 0; white-space: nowrap; margin-right:12px;">
-                          <label for="lv">Level:{{selectedLevel}}</label>
+                          <label for="lv">Level:</label>
                           <select ng-model="selectedLevel"  name="lvl" id="lvl">
                             <option ng-repeat="value in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]" >
                                 {{value}}
@@ -48,54 +48,60 @@
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Health</span>
                                   </td>
                                   <td class="data-health">
-                                      1576
+                                      {{championStats.hp}}
                                   </td>
                                   <td style="text-align:left; width:95px; font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase"> Attack damage</span>
                                   </td>
-                                  <td class="data-attack_damage">93</td>
+                                  <td class="data-attack_damage">
+                                      {{championStats.attackdamage}}
+                                  </td>
                               </tr>
                               <tr>
                                   <td style="text-align:left;font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Health regen</span>
                                   </td>
-                                  <td class="data-health_regeneration">14.5</td>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Attack speed</span>
-
+                                  <td class="data-health_regeneration">
+                                      {{championStats.hpregen}}
                                   </td>
-                                  <td class="data-attack_speed">0.668 (+26.5%)</td>
+                                  <td style="text-align:left;font-size:smaller;">
+                                      <!--<span style="font-weight:bold;font-size:89%;text-transform:uppercase">Attack speed</span>-->
+                                  </td>
+                                  <td class="data-attack_speed">
+                                      <!--{{selectedChampionService.champData.stats.hp}} (+26.5%)-->
+                                  </td>
                               </tr>
                               <tr>
                                   <td style="text-align:left;font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Mana</span>
                                   </td>
-                                  <td class="data-mana">997</td>
+                                  <td class="data-mana">{{championStats.mp}}</td>
                                   <td style="text-align:left;font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">
                                           Armor
                                       </span>
                                   </td>
-                                  <td class="data-armor">67.3</td>
+                                  <td class="data-armor">{{championStats.armor}}</td>
                               </tr>
                               <tr>
                                   <td style="text-align:left;font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Mana regen</span>
                                   </td>
-                                  <td class="data-mana_regeneration">16.6</td><td style="text-align:left;font-size:smaller;">
+                                  <td class="data-mana_regeneration">{{championStats.mpregen}}</td>
+                                  <td style="text-align:left;font-size:smaller;">
                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Magic res.</span>
                                   </td>
-                                  <td class="data-magic_resistance">30.0</td>
+                                  <td class="data-magic_resistance">{{championStats.spellblock}}</td>
                               </tr>
                               <tr>
                                   <td style="text-align:left;font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Range</span>
                                   </td>
-                                  <td class="data-range"> 550 <span class="increase">(Ranged)</span></td>
+                                  <td class="data-range"> {{selectedChampionService.champData.stats.attackrange}}</td>
                                   <td style="text-align:left;font-size:smaller;">
                                       <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Mov. speed</a></span>
                                   </td>
-                                  <td class="data-movement_speed"> 330</td>
+                                  <td class="data-movement_speed"> {{selectedChampionService.champData.stats.movespeed}}</td>
                               </tr>
                           </tbody>
                       </table>
@@ -112,7 +118,7 @@
     <ul class="champion-list">
       <li ng-repeat="champion in data.data">
         <div class="champion-image" >
-          <img ng-click="selectChampion(champion.id)" ng-src="http://ddragon.leagueoflegends.com/cdn/4.19.3/img/champion/{{champion.image.full}}" resize></img>
+          <img ng-click="selectChampion(champion.id)" ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/champion/{{champion.image.full}}" resize></img>
         </div>
       </li>
     </ul>
