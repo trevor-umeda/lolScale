@@ -111,9 +111,27 @@
                       </td></tr>
                       </tbody>
                     </table>
+
       </div>
   </div>
 
+  <div ng-controller="CharacterMovesController">
+      <div ng-show="selectedChampionService.selectionMade">
+          <br>
+          <table id=champion_info-lower-preseason" style="position:relative; box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;text-align:center;padding:12px 12px; border-spacing:0; width:100%; max-width:612px;margin:0 auto;">
+              <thead>
+              <td ng-repeat="spell in selectedChampionService.champData.spells">
+                  <div class="champion-image" >
+                      <img ng-click="selectSpell($index)" ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/spell/{{spell.id}}.png" resize></img>
+                  </div>
+              </td>
+              </thead>
+          </table>
+          <div ng-show="selectedChampionService.spellSelectionMade">
+               {{selectedSpellData.tooltip}}
+          </div>
+          </div>
+  </div>
   <div ng-controller="ChampionListCtrl">
     <ul class="champion-list">
       <li ng-repeat="champion in data.data">

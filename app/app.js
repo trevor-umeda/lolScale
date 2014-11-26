@@ -17,7 +17,8 @@ angular.module('lolScaleApp.services',[]).factory('selectedChampionService',func
     return{
         selectionMade: false,
         champSelection: '',
-        champData: {}
+        champData: {},
+        spellSelectionMade: false
     };
 }).factory('versionService',function($http){
     var versionData = {
@@ -40,44 +41,67 @@ angular.module('lolScaleApp.services',[]).factory('selectedChampionService',func
     };
 });
 
-
-
 lolScaleApp.controller('ChampionDetailsCtrl' , ['$scope', '$http', 'selectedChampionService', 'versionService',
     function( $scope, $http, selectedChampionService, versionService) {
-   $scope.selectedChampionService = selectedChampionService;
-   $scope.versionService = versionService;
+        $scope.selectedChampionService = selectedChampionService;
+        $scope.versionService = versionService;
 
-    $scope.selectedLevel = 1;
-   $scope.championStats = {
-       hp:0,
-       attackdamage:0,
-       hpregen:0,
-       mp:0,
-       armor:0,
-       mpregen:0,
-       spellblock:0,
-       attackrange:0,
-       movespeed:0
-   };
-    var calculateStats = function(){
-        if($scope.selectedChampionService.champData.stats != null){
-            console.log($scope.selectedChampionService.champData.id)
-            $scope.championStats.hp = $scope.selectedChampionService.champData.stats.hp + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.hpperlevel)
-            $scope.championStats.mp = $scope.selectedChampionService.champData.stats.mp + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.mpperlevel)
+        $scope.selectedLevel = 1;
+        $scope.championStats = {
+            hp:0,
+            attackdamage:0,
+            hpregen:0,
+            mp:0,
+            armor:0,
+            mpregen:0,
+            spellblock:0,
+            attackrange:0,
+            movespeed:0
+        };
+        var calculateStats = function(){
+            if($scope.selectedChampionService.champData.stats != null){
+                console.log($scope.selectedChampionService.champData.id)
+                $scope.championStats.hp = $scope.selectedChampionService.champData.stats.hp + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.hpperlevel)
+                $scope.championStats.mp = $scope.selectedChampionService.champData.stats.mp + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.mpperlevel)
 
-            $scope.championStats.hpregen = $scope.selectedChampionService.champData.stats.hpregen + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.hpregenperlevel)
-            $scope.championStats.mpregen = $scope.selectedChampionService.champData.stats.mpregen + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.mpregenperlevel)
-            $scope.championStats.attackdamage = $scope.selectedChampionService.champData.stats.attackdamage + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.attackdamageperlevel)
-            $scope.championStats.armor = $scope.selectedChampionService.champData.stats.armor + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.armorperlevel)
-            $scope.championStats.spellblock = $scope.selectedChampionService.champData.stats.spellblock + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.spellblockperlevel)
+                $scope.championStats.hpregen = $scope.selectedChampionService.champData.stats.hpregen + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.hpregenperlevel)
+                $scope.championStats.mpregen = $scope.selectedChampionService.champData.stats.mpregen + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.mpregenperlevel)
+                $scope.championStats.attackdamage = $scope.selectedChampionService.champData.stats.attackdamage + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.attackdamageperlevel)
+                $scope.championStats.armor = $scope.selectedChampionService.champData.stats.armor + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.armorperlevel)
+                $scope.championStats.spellblock = $scope.selectedChampionService.champData.stats.spellblock + (($scope.selectedLevel-1) * $scope.selectedChampionService.champData.stats.spellblockperlevel)
 
 
+            }
+        };
+        $scope.$watch('selectedLevel',calculateStats,true);
+        $scope.$watch('selectedChampionService.champSelection',calculateStats,true);
+
+    }]);
+
+lolScaleApp.controller('CharacterMovesController' , ['$scope', '$http', 'selectedChampionService', 'versionService',
+    function( $scope, $http, selectedChampionService, versionService) {
+        $scope.selectedChampionService = selectedChampionService;
+        $scope.versionService = versionService;
+        $scope.selectedSpellData = {};
+        $scope.selectedLevel = 1;
+        $scope.championStats = {
+            hp:0,
+            attackdamage:0,
+            hpregen:0,
+            mp:0,
+            armor:0,
+            mpregen:0,
+            spellblock:0,
+            attackrange:0,
+            movespeed:0
+        };
+        $scope.selectSpell = function(spell){
+            console.log(spell);
+            $scope.selectedChampionService.spellSelectionMade = true;
+            $scope.selectedSpellData = $scope.selectedChampionService.champData.spells[spell]
         }
-    };
-    $scope.$watch('selectedLevel',calculateStats,true);
-    $scope.$watch('selectedChampionService.champSelection',calculateStats,true);
 
-}]);
+    }]);
 
 lolScaleApp.controller('ChampionListCtrl', ['$scope', '$http', 'selectedChampionService', 'versionService',
     function ($scope, $http, selectedChampionService, versionService) {
