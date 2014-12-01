@@ -9,8 +9,18 @@
   <title></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="lib/angular-ui-bootstrap-modal.js"></script>
+  <script src="app.js"></script>
+  <script src="components/version/version.js"></script>
+  <script src="components/version/version-directive.js"></script>
+  <script src="components/version/interpolate-filter.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bootstrap.css">
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
@@ -20,118 +30,183 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
+<div class="row">
+  <div ng-controller="SideController">
 
-  <div ng-controller="ChampionDetailsCtrl">
-      <div ng-show="selectedChampionService.selectionMade">
-          <img ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/champion/{{selectedChampionService.champSelection}}.png" ></img>
-          <table id="champion_info-lower-preseason" style="position:relative; box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;text-align:center;padding:12px 12px; border-spacing:0; width:100%; max-width:612px;margin:0 auto;">
-              <tbody>
-              <tr>
-                  <td>
-                      <div id="levelselectcontainer" style="position: absolute; left: auto; right: 0; white-space: nowrap; margin-right:12px;">
-                          <label for="lv">Level:</label>
-                          <select ng-model="selectedLevel"  name="lvl" id="lvl">
-                            <option ng-repeat="value in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]" >
-                                {{value}}
-                            </option>
-                          </select>
-                      </div>
-                      <b> {{selectedChampionService.champData.id}}</b>
-                  </td>
-              </tr>
-              <tr>
-                  <td>
-                      <table style="width:90%; margin:auto;">
-                          <tbody>
-                              <tr>
-                                  <td style="text-align:left; width:95px; font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Health</span>
-                                  </td>
-                                  <td class="data-health">
-                                      {{championStats.hp}}
-                                  </td>
-                                  <td style="text-align:left; width:95px; font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase"> Attack damage</span>
-                                  </td>
-                                  <td class="data-attack_damage">
-                                      {{championStats.attackdamage}}
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Health regen</span>
-                                  </td>
-                                  <td class="data-health_regeneration">
-                                      {{championStats.hpregen}}
-                                  </td>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <!--<span style="font-weight:bold;font-size:89%;text-transform:uppercase">Attack speed</span>-->
-                                  </td>
-                                  <td class="data-attack_speed">
-                                      <!--{{selectedChampionService.champData.stats.hp}} (+26.5%)-->
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Mana</span>
-                                  </td>
-                                  <td class="data-mana">{{championStats.mp}}</td>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">
-                                          Armor
-                                      </span>
-                                  </td>
-                                  <td class="data-armor">{{championStats.armor}}</td>
-                              </tr>
-                              <tr>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Mana regen</span>
-                                  </td>
-                                  <td class="data-mana_regeneration">{{championStats.mpregen}}</td>
-                                  <td style="text-align:left;font-size:smaller;">
-                                     <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Magic res.</span>
-                                  </td>
-                                  <td class="data-magic_resistance">{{championStats.spellblock}}</td>
-                              </tr>
-                              <tr>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Range</span>
-                                  </td>
-                                  <td class="data-range"> {{selectedChampionService.champData.stats.attackrange}}</td>
-                                  <td style="text-align:left;font-size:smaller;">
-                                      <span style="font-weight:bold;font-size:89%;text-transform:uppercase">Mov. speed</a></span>
-                                  </td>
-                                  <td class="data-movement_speed"> {{selectedChampionService.champData.stats.movespeed}}</td>
-                              </tr>
-                          </tbody>
+  <div ng-repeat="side in [0,1]"class="col-md-6" ng-click="pickSide(side)">
+    <div ng-controller="ChampionDetailsCtrl">
+        <div ng-show="selectedChampionService.selectionMade" ng-cloak>
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <img ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/champion/{{selectedChampionService.champSelection}}.png" ></img>
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+            <table id="champion_info-lower-preseason" class="champion-stats-table" >
+                <tbody>
+                <tr>
+                    <td>
+                        <div id="levelselectcontainer" style="position: absolute; left: auto; right: 0; white-space: nowrap; margin-right:12px;">
+                            <label for="lv">Level:</label>
+                            <select ng-model="selectedChampionService.selectedLevel"  name="lvl" id="lvl">
+                              <option ng-repeat="value in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]" >
+                                  {{value}}
+                              </option>
+                            </select>
+                        </div>
+                        <div ng-bind="selectedChampionService.champData.id"><b></b></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="champ-stats" >
+                            <tbody>
+                                <tr>
+                                    <td >
+                                        <span class="champ-stat">Health</span>
+                                    </td>
+                                    <td ng-bind="selectedChampionService.championStats.hp">
+
+                                    </td>
+                                    <td>
+                                        <span class="champ-stat"> Attack damage</span>
+                                    </td>
+                                    <td>
+                                        {{selectedChampionService.championStats.attackdamage}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="champ-stat">Health regen</span>
+                                    </td>
+                                    <td>
+                                        {{selectedChampionService.championStats.hpregen}}
+                                    </td>
+                                    <td>
+                                        <span class="champ-stat">Ability Power</span>
+                                    </td>
+                                    <td>
+                                        {{selectedChampionService.championStats.spelldamage}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="champ-stat">Mana</span>
+                                    </td>
+                                    <td>{{selectedChampionService.championStats.mp}}</td>
+                                    <td>
+                                        <span class="champ-stat">Armor</span>
+                                    </td>
+                                    <td>{{selectedChampionService.championStats.armor}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="champ-stat">Mana regen</span>
+                                    </td>
+                                    <td>{{selectedChampionService.championStats.mpregen}}</td>
+                                    <td>
+                                       <span class="champ-stat">Magic res.</span>
+                                    </td>
+                                    <td>{{selectedChampionService.championStats.spellblock}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="champ-stat">Range</span>
+                                    </td>
+                                    <td> {{selectedChampionService.champData.stats.attackrange}}</td>
+                                    <td>
+                                        <span class="champ-stat">Mov. speed</a></span>
+                                    </td>
+                                    <td> {{selectedChampionService.champData.stats.movespeed}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </td></tr>
+                    <tr>
+                        <td>
+                        </td></tr>
+                        </tbody>
                       </table>
-                      </td></tr>
-                  <tr>
-                      <td>
-                      </td></tr>
-                      </tbody>
-                    </table>
+                    </div>
+                    <div class="col-md-1"></div>
 
-      </div>
-  </div>
+                </div>
+        </div>
+    </div>
 
-  <div ng-controller="CharacterMovesController">
-      <div ng-show="selectedChampionService.selectionMade">
-          <br>
-          <table id=champion_info-lower-preseason" style="position:relative; box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;text-align:center;padding:12px 12px; border-spacing:0; width:100%; max-width:612px;margin:0 auto;">
-              <thead>
-              <td ng-repeat="spell in selectedChampionService.champData.spells">
+    <div ng-controller="ItemSelectionController">
+      <div ng-show="selectedChampionService.selectionMade" ng-cloak>
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-10">
+            <table class="item-table">
+              <tr>
+                <td class="item-slot" ng-repeat="item in selectedChampionService.championItems" ng-click="open($index)">
+                  <img ng-show="item.image" ng-src="http://ddragon.leagueoflegends.com/cdn/3.14.41/img/item/{{item.image.full}}" ></img>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-1"></div>
+        </div>
+        <div modal="showModal" close="cancel()">
+          <div class="modal-header">
+              <h4>Item Selector</h4>
+          </div>
+          <div class="modal-body">
+              <ul class="champion-list">
+                <li ng-repeat="(key, item) in itemData">
                   <div class="champion-image" >
-                      <img ng-click="selectSpell($index)" ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/spell/{{spell.id}}.png" resize></img>
+                    <img ng-click="selectItem(key)" ng-src="http://ddragon.leagueoflegends.com/cdn/3.14.41/img/item/{{item.image.full}}" ></img>
                   </div>
-              </td>
-              </thead>
-          </table>
-          <div ng-show="selectedChampionService.spellSelectionMade">
-               {{selectedSpellData.tooltip}}
+                </li>
+              </ul>
           </div>
+          <div class="modal-footer">
+            <button class="btn" ng-click="cancel()">Cancel</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div ng-controller="CharacterMovesController">
+        <div ng-show="selectedChampionService.selectionMade" ng-cloak>
+            <br>
+            <table id="champion_info-lower-preseason" class="champion-stats-table">
+                <thead>
+                  <td ng-repeat="spell in selectedChampionService.champData.spells">
+                      <div class="champion-image" >
+                          <img ng-click="selectSpell($index)" ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/spell/{{spell.id}}.png" resize></img>
+                      </div>
+                  </td>
+                </thead>
+                <tbody>
+                  <td>
+                      <select ng-model="selectedMoveLevel"  name="lvl" id="lvl">
+                        <option ng-repeat="value in [1,2,3,4,5]" >
+                            {{value}}
+                        </option>
+                      </select>
+                    <td>
+                </tbody>
+            </table>
+            <div ng-show="selectedChampionService.spellSelectionMade">
+                <div class="panel panel-default">
+                  <div class="panel-body">
+                    <div ng-bind-html="computeMoveTooltip(selectedSpellData.tooltip)"></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
+</div>
+</div>
+<div class="row">
   <div ng-controller="ChampionListCtrl">
     <ul class="champion-list">
       <li ng-repeat="champion in data.data">
@@ -142,16 +217,11 @@
     </ul>
   </div>
 
-
+</div>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="app.js"></script>
-  <script src="components/version/version.js"></script>
-  <script src="components/version/version-directive.js"></script>
-  <script src="components/version/interpolate-filter.js"></script>
+
 </body>
 </html>

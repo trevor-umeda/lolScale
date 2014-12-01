@@ -38,3 +38,59 @@
     display: inline;
 
 }
+.colorFF8C00{
+  color: #FF8C00;
+}
+.color99FF99{
+  color: #99ff99;
+}
+
+.champion-stats-table{
+  position:relative;
+  box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;
+  text-align:center;
+  padding:12px 12px;
+  border-spacing:0;
+  width:100%;
+  max-width:612px;
+  margin:0 auto;"
+}
+.champ-stat {
+  font-weight:bold;
+  font-size:89%;
+  text-transform:uppercase
+}
+.champ-stats td{
+  text-align:left;
+  width:95px;
+  font-size:smaller;
+}
+
+.champ-stats table{
+  width:90%;
+  margin:auto;
+}
+.item-slot{
+  box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;
+}
+
+.item-table{
+    position:relative;
+    border: 1px solid black;
+    table-layout: fixed;
+    box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;
+    text-align:center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.item-slot{
+    border: 1px solid black;
+    overflow: hidden;
+    width: 64px;
+    height:64px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
