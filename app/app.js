@@ -14,47 +14,57 @@ var lolScaleApp = angular.module('lolScaleApp', ['lolScaleApp.services','ngSanit
 
 
 angular.module('lolScaleApp.services',[]).factory('selectedChampionService',function(){
+    var createPlayer = function(){
+        return {
+            champData: {},
+            selectionMade: false,
+            champSelection: '',
+            spellSelectionMade: false,
+            selectedLevel: 1,
+            championStats: {
+                hp:0,
+                attackdamage:0,
+                spelldamage:0,
+                hpregen:0,
+                mp:0,
+                armor:0,
+                mpregen:0,
+                spellblock:0,
+                attackrange:0,
+                movespeed:0
+            },
+            championItems:[1,2,3,4,5,6]
+        }
+    };
     return{
-        selectionMade: false,
-        champSelection: '',
-        champData: {},
-        spellSelectionMade: false,
-        selectedLevel: 1,
-        championStats: {
-            hp:0,
-            attackdamage:0,
-            spelldamage:0,
-            hpregen:0,
-            mp:0,
-            armor:0,
-            mpregen:0,
-            spellblock:0,
-            attackrange:0,
-            movespeed:0
+        selectedPlayerNumber:0,
+        players:[createPlayer(),createPlayer()],
+        getCurrentPlayerData:function(){
+          return this.players[this.selectedPlayerNumber];
         },
-        championItems:[1,2,3,4,5,6],
         computeChampionStats:function(){
-          if(this.champData.stats != null){
-              this.championStats.hp = this.champData.stats.hp + ((this.selectedLevel-1) * this.champData.stats.hpperlevel)
-              this.championStats.mp = this.champData.stats.mp + ((this.selectedLevel-1) * this.champData.stats.mpperlevel)
+          var playerData = this.players[this.selectedPlayerNumber];
+          if(playerData.champData.stats != null){
+              playerData.championStats.hp = playerData.champData.stats.hp + ((playerData.selectedLevel-1) * playerData.champData.stats.hpperlevel)
+              playerData.championStats.mp = playerData.champData.stats.mp + ((playerData.selectedLevel-1) * playerData.champData.stats.mpperlevel)
 
-              this.championStats.hpregen = this.champData.stats.hpregen + ((this.selectedLevel-1) * this.champData.stats.hpregenperlevel)
-              this.championStats.mpregen = this.champData.stats.mpregen + ((this.selectedLevel-1) * this.champData.stats.mpregenperlevel)
-              this.championStats.attackdamage = this.champData.stats.attackdamage + ((this.selectedLevel-1) * this.champData.stats.attackdamageperlevel)
-              this.championStats.spelldamage = 0;
-              this.championStats.armor = this.champData.stats.armor + ((this.selectedLevel-1) * this.champData.stats.armorperlevel)
-              this.championStats.spellblock = this.champData.stats.spellblock + ((this.selectedLevel-1) * this.champData.stats.spellblockperlevel)
+              playerData.championStats.hpregen = playerData.champData.stats.hpregen + ((playerData.selectedLevel-1) * playerData.champData.stats.hpregenperlevel)
+              playerData.championStats.mpregen = playerData.champData.stats.mpregen + ((playerData.selectedLevel-1) * playerData.champData.stats.mpregenperlevel)
+              playerData.championStats.attackdamage = playerData.champData.stats.attackdamage + ((playerData.selectedLevel-1) * playerData.champData.stats.attackdamageperlevel)
+              playerData.championStats.spelldamage = 0;
+              playerData.championStats.armor = playerData.champData.stats.armor + ((playerData.selectedLevel-1) * playerData.champData.stats.armorperlevel)
+              playerData.championStats.spellblock = playerData.champData.stats.spellblock + ((playerData.selectedLevel-1) * playerData.champData.stats.spellblockperlevel)
           }
-          for(var index in this.championItems){
-            if(this.championItems[index].stats){
-              for(var key in this.championItems[index].stats){
+          for(var index in playerData.championItems){
+            if(playerData.championItems[index].stats){
+              for(var key in playerData.championItems[index].stats){
                   console.log(key)
-                  var stat = this.championItems[index].stats[key]
+                  var stat = playerData.championItems[index].stats[key]
                   if(key == "FlatPhysicalDamageMod"){
-                    this.championStats.attackdamage += stat
+                    playerData.championStats.attackdamage += stat
                   }
                   if(key == "FlatMagicDamageMod"){
-                    this.championStats.spelldamage += stat
+                    playerData.championStats.spelldamage += stat
                   }
               }
 
@@ -72,12 +82,6 @@ angular.module('lolScaleApp.services',[]).factory('selectedChampionService',func
         "profileicon":"4.20.1",
         "language":"4.20.1"
     };
-
-    //XRSF seems to cause this to suck
-//    $http.get("http://ddragon.leagueoflegends.com/realms/na.json").success(function(data){
-//        versionData = data.n;
-//        console.log(versionData)
-//    });
     return{
         versionData: versionData
     };
@@ -106,11 +110,8 @@ angular.module('lolScaleApp.services',[]).factory('selectedChampionService',func
 lolScaleApp.controller('SideController' , ['$scope', 'selectedChampionService',
     function( $scope, selectedChampionService) {
         $scope.selectedChampionService = selectedChampionService;
-
-        console.log("TESTING");
-
         $scope.pickSide = function(side){
-          console.log(side)
+          $scope.selectedChampionService.selectedPlayerNumber = side;
         };
     }]);
 
@@ -123,8 +124,7 @@ lolScaleApp.controller('ChampionDetailsCtrl' , ['$scope', '$http', 'selectedCham
         var calculateStats = function(){
             $scope.selectedChampionService.computeChampionStats()
         };
-        $scope.$watch('selectedChampionService.selectedLevel',calculateStats,true);
-        $scope.$watch('selectedChampionService.champSelection',calculateStats,true);
+        $scope.$watch('selectedChampionService.players',calculateStats,true);
 
     }]);
 
@@ -151,7 +151,7 @@ lolScaleApp.controller('ItemSelectionController', ['$scope', 'selectedChampionSe
       $scope.currentItemSlot = -1
     };
     $scope.selectItem = function(itemKey) {
-      $scope.selectedChampionService.championItems[$scope.currenItemSlot] = $scope.itemData[itemKey]
+      $scope.selectedChampionService.getCurrentPlayerData().championItems[$scope.currenItemSlot] = $scope.itemData[itemKey]
       $scope.showModal = false;
       $scope.selectedChampionService.computeChampionStats();
     };
@@ -168,8 +168,8 @@ lolScaleApp.controller('CharacterMovesController' , ['$scope', '$sce', 'selected
         var regex = /{{ (\w+) }}/g;
         var scalingData = {};
         $scope.selectSpell = function(spell){
-            $scope.selectedChampionService.spellSelectionMade = true;
-            $scope.selectedSpellData = $scope.selectedChampionService.champData.spells[spell]
+            $scope.selectedChampionService.getCurrentPlayerData().spellSelectionMade = true;
+            $scope.selectedSpellData = $scope.selectedChampionService.getCurrentPlayerData().champData.spells[spell]
             for(var index in $scope.selectedSpellData.vars){
                 var spellScalingData = $scope.selectedSpellData.vars[index]
                 scalingData[spellScalingData.key] = {"coeff":spellScalingData.coeff,"link":spellScalingData.link}
@@ -195,7 +195,7 @@ lolScaleApp.controller('CharacterMovesController' , ['$scope', '$sce', 'selected
                     else{
                       if(scalingData[replacements[1]]){
                           if(scalingData[replacements[1]].link == "spelldamage"){
-                            var spellDamage = $scope.selectedChampionService.championStats.spelldamage? $scope.selectedChampionService.championStats.spelldamage : 0
+                            var spellDamage = $scope.selectedChampionService.getCurrentPlayerData().championStats.spelldamage? $scope.selectedChampionService.getCurrentPlayerData().championStats.spelldamage : 0
                             damageData = scalingData[replacements[1]].coeff * spellDamage
                           }
                           else{
@@ -203,7 +203,7 @@ lolScaleApp.controller('CharacterMovesController' , ['$scope', '$sce', 'selected
                             if(scalingData[replacements[1]].coeff instanceof Array){
                                 coeff = scalingData[replacements[1]].coeff[moveLevel]
                             }
-                            damageData = coeff * $scope.selectedChampionService.championStats.attackdamage
+                            damageData = coeff * $scope.selectedChampionService.getCurrentPlayerData().championStats.attackdamage
                           }
                       }
                       else{
@@ -226,12 +226,14 @@ lolScaleApp.controller('ChampionListCtrl', ['$scope', '$http', 'selectedChampion
         });
         $scope.selectedChampionService = selectedChampionService;
         $scope.selectChampion = function(champion) {
-
-          $scope.selectedChampionService.selectionMade = true;
-          $scope.selectedChampionService.spellSelectionMade = false;
+          if($scope.selectedChampionService.selectedPlayerNumber == 0 && $scope.selectedChampionService.getCurrentPlayerData().selectionMade == true){
+              $scope.selectedChampionService.selectedPlayerNumber = 1;
+          }
+          $scope.selectedChampionService.getCurrentPlayerData().selectionMade = true;
+          $scope.selectedChampionService.getCurrentPlayerData().spellSelectionMade = false;
           $http.get("http://ddragon.leagueoflegends.com/cdn/" + $scope.versionService.versionData.champion + "/data/en_US/champion/" + champion + ".json").success(function(data){
-              $scope.selectedChampionService.champData = data.data[champion];
-              $scope.selectedChampionService.champSelection = champion
+              $scope.selectedChampionService.getCurrentPlayerData().champData = data.data[champion];
+              $scope.selectedChampionService.getCurrentPlayerData().champSelection = champion
           });
       }
 

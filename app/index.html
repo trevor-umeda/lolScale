@@ -35,11 +35,11 @@
 
   <div ng-repeat="side in [0,1]"class="col-md-6" ng-click="pickSide(side)">
     <div ng-controller="ChampionDetailsCtrl">
-        <div ng-show="selectedChampionService.selectionMade" ng-cloak>
+        <div ng-show="selectedChampionService.players[side].selectionMade" ng-cloak>
           <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-              <img ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/champion/{{selectedChampionService.champSelection}}.png" ></img>
+              <img ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/champion/{{selectedChampionService.players[side].champSelection}}.png" ></img>
             </div>
             <div class="col-md-4"></div>
           </div>
@@ -52,13 +52,13 @@
                     <td>
                         <div id="levelselectcontainer" style="position: absolute; left: auto; right: 0; white-space: nowrap; margin-right:12px;">
                             <label for="lv">Level:</label>
-                            <select ng-model="selectedChampionService.selectedLevel"  name="lvl" id="lvl">
+                            <select ng-model="selectedChampionService.players[side].selectedLevel"  name="lvl" class="lvl">
                               <option ng-repeat="value in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]" >
                                   {{value}}
                               </option>
                             </select>
                         </div>
-                        <div ng-bind="selectedChampionService.champData.id"><b></b></div>
+                        <div ng-bind="selectedChampionService.players[side].champData.id"><b></b></div>
                     </td>
                 </tr>
                 <tr>
@@ -69,14 +69,14 @@
                                     <td >
                                         <span class="champ-stat">Health</span>
                                     </td>
-                                    <td ng-bind="selectedChampionService.championStats.hp">
+                                    <td ng-bind="selectedChampionService.players[side].championStats.hp">
 
                                     </td>
                                     <td>
                                         <span class="champ-stat"> Attack damage</span>
                                     </td>
                                     <td>
-                                        {{selectedChampionService.championStats.attackdamage}}
+                                        {{selectedChampionService.players[side].championStats.attackdamage}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -84,44 +84,44 @@
                                         <span class="champ-stat">Health regen</span>
                                     </td>
                                     <td>
-                                        {{selectedChampionService.championStats.hpregen}}
+                                        {{selectedChampionService.players[side].championStats.hpregen}}
                                     </td>
                                     <td>
                                         <span class="champ-stat">Ability Power</span>
                                     </td>
                                     <td>
-                                        {{selectedChampionService.championStats.spelldamage}}
+                                        {{selectedChampionService.players[side].championStats.spelldamage}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <span class="champ-stat">Mana</span>
                                     </td>
-                                    <td>{{selectedChampionService.championStats.mp}}</td>
+                                    <td>{{selectedChampionService.players[side].championStats.mp}}</td>
                                     <td>
                                         <span class="champ-stat">Armor</span>
                                     </td>
-                                    <td>{{selectedChampionService.championStats.armor}}</td>
+                                    <td>{{selectedChampionService.players[side].championStats.armor}}</td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <span class="champ-stat">Mana regen</span>
                                     </td>
-                                    <td>{{selectedChampionService.championStats.mpregen}}</td>
+                                    <td>{{selectedChampionService.players[side].championStats.mpregen}}</td>
                                     <td>
                                        <span class="champ-stat">Magic res.</span>
                                     </td>
-                                    <td>{{selectedChampionService.championStats.spellblock}}</td>
+                                    <td>{{selectedChampionService.players[side].championStats.spellblock}}</td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <span class="champ-stat">Range</span>
                                     </td>
-                                    <td> {{selectedChampionService.champData.stats.attackrange}}</td>
+                                    <td> {{selectedChampionService.players[side].champData.stats.attackrange}}</td>
                                     <td>
                                         <span class="champ-stat">Mov. speed</a></span>
                                     </td>
-                                    <td> {{selectedChampionService.champData.stats.movespeed}}</td>
+                                    <td> {{selectedChampionService.players[side].champData.stats.movespeed}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -139,13 +139,13 @@
     </div>
 
     <div ng-controller="ItemSelectionController">
-      <div ng-show="selectedChampionService.selectionMade" ng-cloak>
+      <div ng-show="selectedChampionService.players[side].selectionMade" ng-cloak>
         <div class="row">
           <div class="col-md-1"></div>
           <div class="col-md-10">
             <table class="item-table">
               <tr>
-                <td class="item-slot" ng-repeat="item in selectedChampionService.championItems" ng-click="open($index)">
+                <td class="item-slot" ng-repeat="item in selectedChampionService.players[side].championItems" ng-click="open($index)">
                   <img ng-show="item.image" ng-src="http://ddragon.leagueoflegends.com/cdn/3.14.41/img/item/{{item.image.full}}" ></img>
                 </td>
               </tr>
@@ -174,11 +174,11 @@
     </div>
 
     <div ng-controller="CharacterMovesController">
-        <div ng-show="selectedChampionService.selectionMade" ng-cloak>
+        <div ng-show="selectedChampionService.players[side].selectionMade" ng-cloak>
             <br>
             <table id="champion_info-lower-preseason" class="champion-stats-table">
                 <thead>
-                  <td ng-repeat="spell in selectedChampionService.champData.spells">
+                  <td ng-repeat="spell in selectedChampionService.players[side].champData.spells">
                       <div class="champion-image" >
                           <img ng-click="selectSpell($index)" ng-src="http://ddragon.leagueoflegends.com/cdn/{{versionService.versionData.champion}}/img/spell/{{spell.id}}.png" resize></img>
                       </div>
@@ -186,7 +186,7 @@
                 </thead>
                 <tbody>
                   <td>
-                      <select ng-model="selectedMoveLevel"  name="lvl" id="lvl">
+                      <select ng-model="selectedMoveLevel"  name="lvl" class="lvl">
                         <option ng-repeat="value in [1,2,3,4,5]" >
                             {{value}}
                         </option>
@@ -194,7 +194,7 @@
                     <td>
                 </tbody>
             </table>
-            <div ng-show="selectedChampionService.spellSelectionMade">
+            <div ng-show="selectedChampionService.players[side].spellSelectionMade">
                 <div class="panel panel-default">
                   <div class="panel-body">
                     <div ng-bind-html="computeMoveTooltip(selectedSpellData.tooltip)"></div>

@@ -44,7 +44,9 @@
 .color99FF99{
   color: #99ff99;
 }
-
+.lvl{
+    width:50px;
+}
 .champion-stats-table{
   position:relative;
   box-shadow:0 2px 5px black, inset 0 7px 5px -5px black;
