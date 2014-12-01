@@ -1,1 +1,0 @@
-grunt.registerTask('heroku', ['build']);
